@@ -124,7 +124,8 @@ def CameraCapture(cap, angles_vec, leg_to_analyze, min, max, angle_range):
                     image, angle = displayVisualization(right_knee_landmarks, leg_connections, image, results, cap_size)
 
                 # Data validation
-                validateData(angle, angles_vec)
+                # validateData(angle, angles_vec)
+                angles_vec.append(angle)
                 min = np.min(angles_vec)
                 max = np.max(angles_vec)
                 angle_range = abs(max-min)
