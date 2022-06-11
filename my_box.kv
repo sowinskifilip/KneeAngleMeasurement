@@ -113,7 +113,7 @@
                     text: "LEFT"
                     size_hint: (1, 0.5)
                     on_press:
-                        root.leg_sel_left()
+                        root.pressed_left()
                     background_color:(0, 0.5, 1, 1)
                     canvas.before:
                         Color:
@@ -126,7 +126,7 @@
                     text: "RIGHT"
                     size_hint: (1, 0.5)
                     on_press:
-                        root.leg_sel_right()
+                        root.pressed_right()
                     background_color:(0, 0.5, 1, 1)
                     canvas.before:
                         Color:
@@ -142,17 +142,6 @@
 
                 spacing: 20
 
-                Label:
-                    text: "Angle:"
-                    size_hint: (1, 0.5)
-                    id:angle
-                    background_color:(1, 0.5, 0, 0.7)
-                    canvas.before:
-                        Color:
-                            rgba: self.background_color
-                        Rectangle
-                            size: self.size
-                            pos: self.pos
 
                 Label:
                     text: "Max angle:"
