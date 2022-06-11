@@ -1,0 +1,278 @@
+<MainWindow>
+    canvas.before:
+        Color:
+            rgba: (0.6,0.6,0.6,1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+
+        spacing: 20
+        padding: 50
+
+        BoxLayout:
+            orientation: "vertical"
+            size: root.width, root.height
+            spacing: 20
+
+            Button:
+                text: "Press to START"
+                size_hint: (1, 0.5)
+                background_color:(0.2, 0.8, 0.2, 1)
+                canvas.before:
+                    Color:
+                        rgba: self.background_color
+                    Rectangle
+                        size: self.size
+                        pos: self.pos
+                on_press: root.press_start()
+
+            BoxLayout:
+                orientation: "horizontal"
+                size: root.width, root.height
+
+                spacing: 20
+
+                Label:
+                    text: "Choose leg:"
+                    size_hint: (1, 0.5)
+                    background_color:(0.2, 0.2, 0.2, 1)
+                    canvas.before:
+                        Color:
+                            rgba: self.background_color
+                        Rectangle
+                            size: self.size
+                            pos: self.pos
+
+
+                Button:
+                    text: "LEFT"
+                    size_hint: (1, 0.5)
+                    on_press:
+                        root.pressed_left()
+                    background_color:(0, 0.5, 1, 1)
+                    canvas.before:
+                        Color:
+                            rgba: self.background_color
+                        Rectangle
+                            size: self.size
+                            pos: self.pos
+
+                Button:
+                    text: "RIGHT"
+                    size_hint: (1, 0.5)
+                    on_press:
+                        root.pressed_right()
+                    background_color:(0, 0.5, 1, 1)
+                    canvas.before:
+                        Color:
+                            rgba: self.background_color
+                        Rectangle
+                            size: self.size
+                            pos: self.pos
+
+
+            BoxLayout:
+                orientation: "horizontal"
+                size: root.width, root.height
+
+                spacing: 20
+
+                Label:
+                    text: "Max angle:"
+                    size_hint: (1, 0.5)
+                    background_color:(1, 0.5, 0, 0.7)
+                    id:max_angle
+                    canvas.before:
+                        Color:
+                            rgba: self.background_color
+                        Rectangle
+                            size: self.size
+                            pos: self.pos
+
+                Label:
+                    text: "Min angle:"
+                    size_hint: (1, 0.5)
+                    background_color:(1, 0.5, 0, 0.7)
+                    id:min_angle
+                    canvas.before:
+                        Color:
+                            rgba: self.background_color
+                        Rectangle
+                            size: self.size
+                            pos: self.pos
+
+                Label:
+                    text: "Left/Right"
+                    size_hint: (1, 0.5)
+                    id:selected_leg
+                    background_color:(1, 0.5, 0, 0.7)
+                    canvas.before:
+                        Color:
+                            rgba: self.background_color
+                        Rectangle
+                            size: self.size
+                            pos: self.pos
+
+        BoxLayout:
+            orientation: "vertical"
+            size: root.width, root.height
+            spacing: 20
+
+            BoxLayout:
+                orientation: "vertical"
+                size: root.width, root.height
+                spacing: 20
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size: root.width, root.height
+                    spacing: 20
+
+                    Label:
+                        id: name_label
+                        text: "Dane pacjenta:"
+                        size_hint: (0.3, 0.5)
+
+
+                    TextInput:
+                        id: name_input
+                        multiline:False
+                        size_hint: (1, 0.5)
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size: root.width, root.height
+                    spacing: 20
+
+                    Label:
+                        id: id_label
+                        text: "Identyfikator:"
+                        size_hint: (0.3, 0.5)
+
+
+                    TextInput:
+                        id: id_input
+                        multiline:False
+                        size_hint: (1, 0.5)
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: 20
+
+                Label:
+                    id:save_label
+                    size_hint: (1, 0.5)
+                    text: "Waiting for test"
+                    font_size: 20
+
+                Button:
+                    text: "NEXT"
+                    size_hint: (0.3, 0.5)
+                    background_color:(0, 0.5, 1, 1)
+                    canvas.before:
+                        Color:
+                            rgba: self.background_color
+                        Rectangle
+                            size: self.size
+                            pos: self.pos
+                    on_press:
+                        #root.update_after_meas()
+                        #root.id_needed()
+                        #root.plot_data()
+                        root.manager.current = "SecondWindow"
+
+
+
+
+
+
+
+<SecondWindow>
+    canvas.before:
+        Color:
+            rgba: (0.6,0.6,0.6,1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+
+        spacing: 20
+        padding: 30
+        BoxLayout:
+            orientation: "vertical"
+            size: root.width, root.height
+            spacing: 20
+            pos_hint: {'top' : 0.9}
+            size_hint: 1, 0.2
+            Label:
+                #pos_hint: {'top' : 0.9}
+                size_hint: 1, 0.1
+                text: "Summary"
+                font_size: 26
+                color: 1,1,1,1
+            Label:
+                #pos_hint: {'top' : 0.9}
+                size_hint: 1, 0.1
+                text: "Patient ID:"
+                font_size: 12
+                color: 1,1,1,1
+        BoxLayout:
+            orientation: "vertical"
+            pos_hint: {'top' : 0.5}
+            spacing: 20
+            size_hint: 1,3
+            #pos_hint: {'center_y': 1}
+            Image:
+                source: 'KneeAngle.png'
+                size_hint: 1, 3
+                id: summary_img
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: 20
+            pos_hint: {'top' : 1}
+            BoxLayout:
+                spacing: 20
+                Label:
+                    text: "Comments"
+                    color: 1,1,1,1
+                    size_hint: 0.3, 0.5
+                TextInput:
+                    id: comments_input
+                    multiline: False
+                    size_hint: 1, 0.5
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: 60
+            pos_hint: {'top' : 1}
+#            Button:
+#                text: "Save"
+#                background_color:(0, 0.5, 1, 1)
+#                canvas.before:
+#                    Color:
+#                        rgba: self.background_color
+#                    Rectangle
+#                        size: self.size
+#                        pos: self.pos
+#                size_hint: 1, 0.6
+#                on_press:
+#                    root.press_to_save()
+
+
+            Button:
+                text: "Home"
+                background_color:(0, 0.5, 1, 1)
+                canvas.before:
+                    Color:
+                        rgba: self.background_color
+                    Rectangle
+                        size: self.size
+                        pos: self.pos
+                size_hint: 1, 0.6
+                on_press:
+                    root.manager.current = "MainWindow"
+

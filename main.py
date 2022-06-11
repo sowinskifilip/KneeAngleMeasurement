@@ -1,76 +1,126 @@
-import cameraprocessing as cp
 import cv2
-import numpy as np
+import cameraprocessing as cp
 import matplotlib.pyplot as plt
 
-from kivy.config import Config
-Config.set('modules', 'monitor', '')
-Config.set('graphics', 'maxfps', '30')
-
 from kivy.app import App
-from kivy.uix.label import Label
-from kivy.uix.image import Image
-from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
+from kivy.lang import Builder
+from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
+from kivy.core.window import Window
 from kivy.clock import Clock
-from kivy.graphics.texture import Texture
 
 
-# def main():
-#     cp.CameraCapture()
-#
-#     return
+###*Defininig the window size*###
+Window.size = (850, 750)
 
-class MyApp(App):
+###* Global variables *###
+zapis_ident = ""
 
-    def build(self):
-        layout = BoxLayout(orientation='vertical')
-        self.image = Image()
-        # layout.add_widget(self.image)
-        # layout.add_widget(Button(
-        #     text='CLICK HERE',
-        #     pos_hint={'center_x': .5, 'center_y': .5},
-        #     size_hint=(None,None))
-        # )
+###* Function creating txt files with given text_data and filename *###
+def write_to_txt(text_data, filename):
+    file = open(f"{filename}.txt", "w")
+    file.write(text_data)
+    file.close()
+
+    return
+
+
+###* Class describing Main Window *###
+class MainWindow(Screen):
+
+    def on_enter(self, *args):
         self.angles_vec = []
-        self.capture = cv2.VideoCapture(0)
-        # Clock.schedule_interval(self.updateCam, 1.0/30.0)
-        cp.CameraCapture(self.capture, self.angles_vec)
-        self.updateImage(self.angles_vec)
+        self.selected_leg = 0
+        self.min_angle = 180
+        self.max_angle = 0
+        self.summary_img_title = ''
+        self.angle_range = 0
 
-        layout.add_widget(self.image)
-        layout.add_widget(Button(
-            text='CLICK HERE',
-            pos_hint={'center_x': .5, 'center_y': .5},
-            size_hint=(None, None))
+        self.updateMinMaxAngle()
+        # Clock.schedule_interval(self.upadeMinMaxAngle, 1)
+        return
+
+    ###* Function triggerred with 'q' keybtn - ending the measurement *###
+    def update_after_meas(self):
+        name = self.ids.name_input.text
+        ident = self.ids.id_input.text
+        global zapis_ident
+        zapis_ident = ident
+        print(zapis_ident)
+
+        self.ids.save_label.text = (
+            f"Patient's data has been updated: \n name: {name}, id: {ident}, angle: ..."
         )
 
-        return layout
+        return
 
-    def updateCam(self, *args):
+    ###* Function triggerred with 'START' btn - starting the measurement *###
+    def press_start(self):
+        self.capture = cv2.VideoCapture(0)
+        self.min_angle, self.max_angle, self.angles_vec, self.angle_range = cp.CameraCapture(self.capture, self.angles_vec,
+                                                          self.selected_leg, self.min_angle, self.max_angle, self.angle_range)
 
-        frame, angle = cp.CameraCapture(self.capture)
-        # ret, frame = self.capture.read()
+        self.updateMinMaxAngle()
+        self.plot_data()
+        return
 
-        self.angles_vec.put(angle)
+    ###* Function creating plot and saving as png in local dir *###
+    def plot_data(self):
+        plt.clf()
+        plt.plot(self.angles_vec, 'b-o')
+        plt.grid(True)
+        plt.title(self.summary_img_title)
+        plt.xlabel('Number of sample')
+        plt.ylabel(r'Knee joint angle $[^{\circ}]$')
+        plt.savefig('KneeAngle.png')
+        return
 
-        self.image_frame = frame
-        buffer = cv2.flip(frame, 0).tobytes()
-        texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
-        texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
-        self.image.texture = texture
+    def pressed_left(self):
+        self.selected_leg = 1
+        self.ids.selected_leg.text = 'Leg: Left'
+        self.summary_img_title = 'Left knee joint measurement'
+        return
+
+    def pressed_right(self):
+        self.selected_leg = 2
+        self.ids.selected_leg.text = 'Leg: Right'
+        self.summary_img_title = 'Right knee joint measurement'
+        return
+
+    def updateMinMaxAngle(self, *args):
+        self.ids.min_angle.text = f"MIN Angle: {self.min_angle}"
+        self.ids.max_angle.text = f"MAX Angle: {self.max_angle}"
+        return
+
+###* Class describing Second Window *###
+class SecondWindow(Screen):
+
+    def on_pre_enter(self, *args):
+        self.ids.summary_img.reload()
+
+        return
+    ###* Function triggerred with 'SAVE' btn creating txt file named with id and typed comments inside in local dir *###
+    def press_to_save(self):
+    #     comments = self.ids.comments_input.text
+    #     print("DATA SAVED!!!", zapis_ident)
+    #     write_to_txt(comments, zapis_ident)
+        return
 
 
-    def updateImage(self, *args):
-        # plt.plot(self.angles_vec)
-        # plt.savefig('KneeAngle.png')
-        self.image = Image(source='KneeAngle.png')
+###* Loading data from kv. file *###
+kv = Builder.load_file("my_box.kv")
 
 
+###* Class describing Main desktop app class *###
+class KneeAngleMeasurementApp(App):
+    def build(self):
+        sm = ScreenManager(transition=NoTransition())
+        sm.add_widget(MainWindow(name="MainWindow"))
+        sm.add_widget(SecondWindow(name="SecondWindow"))
+        # sm.transition()
+
+        return sm
 
 
-if __name__ == '__main__':
-    MyApp().run()
-
-
+# Press the green button in the gutter to run the script.
+if __name__ == "__main__":
+    KneeAngleMeasurementApp().run()
