@@ -7,6 +7,8 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.clock import Clock
+from datetime import datetime
+from datetime import date
 
 
 ###*Defininig the window size*###
@@ -16,8 +18,10 @@ Window.size = (850, 750)
 zapis_ident = ""
 
 ###* Function creating txt files with given text_data and filename *###
-def write_to_txt(text_data, filename):
-    file = open(f"{filename}.txt", "w")
+def write_to_txt(date_time,text_data, filename):
+    file = open(f"{filename}.txt", "w", encoding='utf8')
+    file.write(date_time)
+    file.write('\n')
     file.write(text_data)
     file.close()
 
@@ -107,9 +111,14 @@ class SecondWindow(Screen):
         return
     ###* Function triggerred with 'SAVE' btn creating txt file named with id and typed comments inside in local dir *###
     def press_to_save(self):
-    #     comments = self.ids.comments_input.text
-    #     print("DATA SAVED!!!", zapis_ident)
-    #     write_to_txt(comments, zapis_ident)
+        comments = self.ids.comments_input.text
+        print("DATA SAVED!!!", zapis_ident)
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        today = date.today()
+        td_string = today.strftime("%d_%m_%Y")
+        nazwa = zapis_ident + ' ' + td_string
+        write_to_txt(dt_string,comments, nazwa)
         return
 
 
