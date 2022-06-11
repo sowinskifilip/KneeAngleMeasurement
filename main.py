@@ -9,7 +9,6 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 from datetime import datetime
 from datetime import date
-###koment
 
 ###*Defininig the window size*###
 Window.size = (850, 750)
@@ -32,7 +31,6 @@ class StartWindow(Screen):
 
     ###* Function
     def fun(self):
-
         return
 
 ###* Class describing Main Window *###
