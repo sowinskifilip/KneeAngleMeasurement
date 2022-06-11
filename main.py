@@ -8,6 +8,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.clock import Clock
 
+###TO JEST MOJ KOMENT####
 
 ###*Defininig the window size*###
 Window.size = (850, 750)
