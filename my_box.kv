@@ -1,3 +1,65 @@
+<StartWindow>
+    canvas.before:
+        Color:
+            rgba: (0.6,0.6,0.6,1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+
+        spacing: 20
+        padding: 50
+
+        Label:
+            text: "Knee joint angle measurement"
+            color: 1,1,1,1
+            size_hint: 1, 0.1
+            font_size: 36
+
+        Label:
+            text: "Description&Manual:"
+            color: 1,1,1,1
+            size_hint: 1, 0.1
+            font_size: 20
+
+        Label:
+            text: "An app dedicated to doctors, physios and their patients, as a support in rehab process. \nTo process the test, press 'Home' and follow the steps: \n - choose the examined leg (LEFT/RIGHT) \n - type patient’s data \n - type patient’s ID \n - press the green button to start the test \n - position patient’s body in camera range. Make sure, that that body is recognized \n - when the measurement ended press ‘q’ on the keyboard to end the test \n - click NEXT to move to the Summary \n - type any comments to save it in txt file \n - press home if you want to repeat measurement"
+            color: 1,1,1,1
+            size_hint: 1, 0.3
+            background_color:(0.5, 0.5, 0.5, 1)
+            canvas.before:
+                Color:
+                    rgba: self.background_color
+                Rectangle
+                    size: self.size
+                    pos: self.pos
+
+        Label:
+            text: "Authors: Filip Sowinski, Mikolaj Pogonowski, Adam Paech"
+            color: 1,1,1,1
+            size_hint: 1, 0.1
+            background_color:(0.5, 0.5, 0.5, 1)
+            canvas.before:
+                Color:
+                    rgba: self.background_color
+                Rectangle
+                    size: self.size
+                    pos: self.pos
+        Button:
+            text: "Home"
+            background_color:(0, 0.5, 1, 1)
+            canvas.before:
+                Color:
+                    rgba: self.background_color
+                Rectangle
+                    size: self.size
+                    pos: self.pos
+            size_hint: 1, 0.1
+            on_press:
+                root.manager.current = "MainWindow"
+
 <MainWindow>
     canvas.before:
         Color:
@@ -51,7 +113,7 @@
                     text: "LEFT"
                     size_hint: (1, 0.5)
                     on_press:
-                        root.pressed_left()
+                        root.leg_sel_left()
                     background_color:(0, 0.5, 1, 1)
                     canvas.before:
                         Color:
@@ -64,7 +126,7 @@
                     text: "RIGHT"
                     size_hint: (1, 0.5)
                     on_press:
-                        root.pressed_right()
+                        root.leg_sel_right()
                     background_color:(0, 0.5, 1, 1)
                     canvas.before:
                         Color:
@@ -79,6 +141,18 @@
                 size: root.width, root.height
 
                 spacing: 20
+
+                Label:
+                    text: "Angle:"
+                    size_hint: (1, 0.5)
+                    id:angle
+                    background_color:(1, 0.5, 0, 0.7)
+                    canvas.before:
+                        Color:
+                            rgba: self.background_color
+                        Rectangle
+                            size: self.size
+                            pos: self.pos
 
                 Label:
                     text: "Max angle:"
@@ -133,7 +207,7 @@
 
                     Label:
                         id: name_label
-                        text: "Dane pacjenta:"
+                        text: "Patient's name:"
                         size_hint: (0.3, 0.5)
 
 
@@ -149,7 +223,7 @@
 
                     Label:
                         id: id_label
-                        text: "Identyfikator:"
+                        text: "Id:"
                         size_hint: (0.3, 0.5)
 
 
@@ -162,11 +236,26 @@
                 orientation: "horizontal"
                 spacing: 20
 
-                Label:
-                    id:save_label
-                    size_hint: (1, 0.5)
-                    text: "Waiting for test"
-                    font_size: 20
+#                Label:
+#                    id:save_label
+#                    size_hint: (1, 0.5)
+#                    text: "Waiting for test"
+#                    font_size: 20
+
+                Button:
+                    text: "BACK"
+                    size_hint: (0.3, 0.5)
+                    background_color:(0, 0.5, 1, 1)
+                    canvas.before:
+                        Color:
+                            rgba: self.background_color
+                        Rectangle
+                            size: self.size
+                            pos: self.pos
+                    on_press:
+                        #root.id_needed()
+                        #root.plot_data()
+                        root.manager.current = "StartWindow"
 
                 Button:
                     text: "NEXT"
@@ -179,10 +268,12 @@
                             size: self.size
                             pos: self.pos
                     on_press:
-                        #root.update_after_meas()
+                        root.update_after_meas()
                         #root.id_needed()
                         #root.plot_data()
                         root.manager.current = "SecondWindow"
+
+
 
 
 
@@ -229,8 +320,7 @@
             #pos_hint: {'center_y': 1}
             Image:
                 source: 'KneeAngle.png'
-                size_hint: 1, 3
-                id: summary_img
+                size_hint: 1, 1
         BoxLayout:
             orientation: "horizontal"
             spacing: 20
@@ -249,18 +339,19 @@
             orientation: "horizontal"
             spacing: 60
             pos_hint: {'top' : 1}
-#            Button:
-#                text: "Save"
-#                background_color:(0, 0.5, 1, 1)
-#                canvas.before:
-#                    Color:
-#                        rgba: self.background_color
-#                    Rectangle
-#                        size: self.size
-#                        pos: self.pos
-#                size_hint: 1, 0.6
-#                on_press:
-#                    root.press_to_save()
+
+            Button:
+                text: "Save"
+                background_color:(0, 0.5, 1, 1)
+                canvas.before:
+                    Color:
+                        rgba: self.background_color
+                    Rectangle
+                        size: self.size
+                        pos: self.pos
+                size_hint: 1, 0.6
+                on_press:
+                    root.press_to_save()
 
 
             Button:

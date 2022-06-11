@@ -23,6 +23,13 @@ def write_to_txt(text_data, filename):
 
     return
 
+###* Class describing Start Window *###
+class StartWindow(Screen):
+
+    ###* Function
+    def fun(self):
+
+        return
 
 ###* Class describing Main Window *###
 class MainWindow(Screen):
@@ -47,9 +54,9 @@ class MainWindow(Screen):
         zapis_ident = ident
         print(zapis_ident)
 
-        self.ids.save_label.text = (
-            f"Patient's data has been updated: \n name: {name}, id: {ident}, angle: ..."
-        )
+        # self.ids.save_label.text = (
+        #     f"Patient's data has been updated: \n name: {name}, id: {ident}, angle: ..."
+        # )
 
         return
 
@@ -114,6 +121,7 @@ kv = Builder.load_file("my_box.kv")
 class KneeAngleMeasurementApp(App):
     def build(self):
         sm = ScreenManager(transition=NoTransition())
+        sm.add_widget(StartWindow(name="StartWindow"))
         sm.add_widget(MainWindow(name="MainWindow"))
         sm.add_widget(SecondWindow(name="SecondWindow"))
         # sm.transition()
