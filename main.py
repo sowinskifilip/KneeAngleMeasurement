@@ -64,7 +64,7 @@ class MainWindow(Screen):
 
     ###* Function triggerred with 'START' btn - starting the measurement *###
     def press_start(self):
-        self.capture = cv2.VideoCapture(0)
+        self.capture = cv2.VideoCapture(1)
         self.min_angle, self.max_angle, self.angles_vec, self.angle_range = cp.CameraCapture(self.capture, self.angles_vec,
                                                           self.selected_leg, self.min_angle, self.max_angle, self.angle_range)
 
